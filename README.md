@@ -11,3 +11,6 @@ It's bindless, meaning there's a single global descriptor set, one index buffer,
 For per-material things like water, I take an "ubershader" approach, where instead of binding several pipelines there is a shader ID I pass in, and I perform a switch case statement to perform actions based on materials. Switching like this is nearly zero overhead on more recent gpus, and snowbound only targets gpus made in the last ~10 years anyway. 
 
 It currently only supports Win32, but I've set it up in a way such that I can add support for other platforms in the future.
+
+Video Demo:
+https://www.youtube.com/watch?v=vayX9Duvcpg
