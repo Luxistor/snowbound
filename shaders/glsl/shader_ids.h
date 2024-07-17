@@ -1,0 +1,2 @@
+#define WATER_SHADER 1U
+#define ICE_SHADER 2U

@@ -1,0 +1,57 @@
+#version 450
+
+#extension GL_GOOGLE_include_directive: require
+
+#include "core.h"
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+struct mesh_t
+{
+	int vertex_offset;
+	uint vertex_count;
+
+	uint first_index;
+	uint index_count;
+};
+
+struct draw_command_t
+{
+    uint index_count;
+    uint instance_count;
+    uint first_index;
+    int vertex_offset;
+    uint first_instance;
+};
+
+BUFFER_REFERENCE(buffer indirect_commands_t
+{
+    uint count;
+    draw_command_t[] draws;
+})
+
+BUFFER_REFERENCE(readonly buffer mesh_ssbo_t
+{
+    mesh_t[] meshes;
+})
+
+SPEC_CONSTANT_BDA(0, indirect_commands_t, indirect_commands)
+SPEC_CONSTANT_BDA(1, mesh_ssbo_t, mesh_ssbo)
+
+void main()
+{
+	uint g_id = gl_GlobalInvocationID.x;
+	if(g_id < draw_infos.count)
+	{
+        draw_info_t info = draw_infos.draws[g_id];
+        mesh_t m = mesh_ssbo.meshes[info.mesh_id];
+        
+        draw_command_t command;
+        command.index_count = m.index_count;
+        command.instance_count = 1;
+        command.first_index = m.first_index;
+        command.vertex_offset = m.vertex_offset;
+        command.first_instance = g_id;
+        indirect_commands.draws[atomicAdd(indirect_commands.count, 1)] = command;
+	}
+}
