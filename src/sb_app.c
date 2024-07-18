@@ -185,8 +185,8 @@ VkPipeline sb_create_graphics_pipeline(sb_app *app, const sb_graphics_pipeline_i
 	pipeline_create_info.basePipelineHandle = VK_NULL_HANDLE;
 	pipeline_create_info.basePipelineIndex = -1;
 
-	VkPipeline pipeline;
-	VK_CHECK(vkCreateGraphicsPipelines(app->device, VK_NULL_HANDLE, 1, &pipeline_create_info, NULL, &pipeline));
+	VkPipeline pipeline;	
+    VK_CHECK(vkCreateGraphicsPipelines(app->device, VK_NULL_HANDLE, 1, &pipeline_create_info, NULL, &pipeline));
 
     if(frag_shader_module)
         vkDestroyShaderModule(app->device, frag_shader_module, NULL);

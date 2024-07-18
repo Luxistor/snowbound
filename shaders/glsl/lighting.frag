@@ -53,7 +53,7 @@ const vec4 specular_color = vec4(1,0.984,0,1.0);
 
 void main()
 {
-  float occlusion_factor = GET_TEXTURE_VAL(lighting_ubo.ssao_id, screen_coords).r;
+  float visibility_factor = GET_TEXTURE_VAL(lighting_ubo.ssao_id, screen_coords).r;
 
   float depth = GET_TEXTURE_VAL(lighting_ubo.depth_buffer_id, screen_coords).r;
   vec3 view_pos = get_view_from_ndc(camera_ubo.projection, vec3(screen_coords, depth)); // vertex position in view space
@@ -83,5 +83,5 @@ void main()
     specular_temp = specular_color*albedo*pow(specular_intensity, specularity*2048.0);
   }
 
-  out_color = ambient_intensity*albedo*occlusion_factor + (diffuse_temp+specular_temp)*shadow_calc(view_pos);
+  out_color = ambient_intensity*albedo*visibility_factor + (diffuse_temp+specular_temp)*shadow_calc(view_pos);
 }

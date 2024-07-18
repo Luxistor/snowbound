@@ -14,7 +14,7 @@ SPEC_CONSTANT_BDA(0, texture_ids_t, texture_ids)
 layout (binding = TEXTURE_ARRAY_BINDING) uniform sampler2D textures[1024];
 
 layout (location = 0) in vec2 frag_uv;
-layout (location = 0) out float out_occlusion_factor;
+layout (location = 0) out float out_visibility_factor;
 
 float offsets[4] = float[]( -1.5, -0.5, 0.5, 1.5);
 
@@ -31,5 +31,5 @@ void main()
             result += GET_TEXTURE_VAL(texture_ids.ssao, frag_uv + offset).r;
         }
     }
-    out_occlusion_factor = result/16.0;
+    out_visibility_factor = result/16.0;
 }

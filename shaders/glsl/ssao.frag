@@ -24,11 +24,11 @@ SPEC_CONSTANT_BDA(1, camera_ubo_t, camera_ubo)
 layout (binding = TEXTURE_ARRAY_BINDING) uniform sampler2D textures[1024];
 
 layout (location = 0) in vec2 frag_uv;
-layout (location = 0) out float out_occlusion_factor;
+layout (location = 0) out float out_visiblity_factor;
 
 void main()
 {   
-    float occlusion_factor = SAMPLE_COUNT;
+    float visibility_factor = SAMPLE_COUNT;
 
     float depth = GET_TEXTURE_VAL(ssao_ubo.depth_buffer_id, frag_uv).r;
     vec3 vertex_position = get_view_from_ndc(camera_ubo.projection, vec3(frag_uv, depth)); // vertex position in view space
@@ -54,11 +54,11 @@ void main()
         {   
             // the current vertice is being occluded by some geometry, so we should decrease the occlusion factor
             // this means that the ambient light factor will be reduced in the lighting pass
-            occlusion_factor -= range_weight;
+            visibility_factor -= range_weight;
         }
     }
 
     // map to [0,1]
-    occlusion_factor /= SAMPLE_COUNT;
-    out_occlusion_factor = pow(occlusion_factor, OCCLUSION_STRENGTH);
+    visibility_factor /= SAMPLE_COUNT;
+    out_visiblity_factor = pow(visibility_factor, OCCLUSION_STRENGTH);
 }
