@@ -48,10 +48,10 @@ void main()
         float dist = abs(vertex_position.z - sample_depth);
         // gives less weight to vertices that are further away
         float range_weight = smoothstep(0.0, 1.0, SAMPLE_RADIUS/dist);
-
+ 
         // if the samples geometry is in front of the current fragment
         if(sample_depth >= (vertex_position.z + BIAS))
-        {   
+        {
             // the current vertice is being occluded by some geometry, so we should decrease the occlusion factor
             // this means that the ambient light factor will be reduced in the lighting pass
             visibility_factor -= range_weight;
@@ -62,3 +62,4 @@ void main()
     visibility_factor /= SAMPLE_COUNT;
     out_visiblity_factor = pow(visibility_factor, OCCLUSION_STRENGTH);
 }
+

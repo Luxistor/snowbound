@@ -441,17 +441,8 @@ VkDescriptorSetLayout create_global_set_layout(VkDevice device)
     texture_array_binding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     texture_array_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-    // debug
-    #define MESH_HANDLE_ARRAY_BINDING 2U
-    VkDescriptorBindingFlags mesh_handle_array_binding_flags = 0;
-    VkDescriptorSetLayoutBinding mesh_handle_array_binding = {0};
-    mesh_handle_array_binding.binding = MESH_HANDLE_ARRAY_BINDING;
-    mesh_handle_array_binding.descriptorCount = 1;
-    mesh_handle_array_binding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    mesh_handle_array_binding.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
-
-    VkDescriptorSetLayoutBinding bindings[] = {draw_info_binding, texture_array_binding, mesh_handle_array_binding};
-    VkDescriptorBindingFlags binding_flags[] = {draw_info_binding_flags, texture_array_binding_flags, mesh_handle_array_binding_flags};
+    VkDescriptorSetLayoutBinding bindings[] = {draw_info_binding, texture_array_binding};
+    VkDescriptorBindingFlags binding_flags[] = {draw_info_binding_flags, texture_array_binding_flags};
 
     VkDescriptorSetLayoutBindingFlagsCreateInfo binding_flags_info = {0};
 	binding_flags_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
@@ -555,23 +546,6 @@ sb_app *sb_create_app(const sb_app_info *info)
     cull_info.compute_shader_name = "shaders/spv/comp.spv";
 
     app->compute_cull_pipeline = sb_create_compute_pipeline(app, &cull_info);
-
-    VkDescriptorBufferInfo buffer_info = {0};
-    buffer_info.buffer = app->mesh_memory.handle_buffer.vk_buffer;
-    buffer_info.offset = 0;
-    buffer_info.range = VK_WHOLE_SIZE;
-
-	VkWriteDescriptorSet write = {0};
-    write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    write.dstSet = app->global_set;
-    write.dstArrayElement = 0;
-    write.descriptorCount = 1;
-    write.dstBinding = 2;
-    write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-    write.pBufferInfo = &buffer_info;
-
-	vkUpdateDescriptorSets(app->device, 1, &write, 0, NULL);
-
     return app;
 }
 
